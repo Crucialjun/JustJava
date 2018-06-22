@@ -13,6 +13,7 @@ package com.example.android.justjava;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 /**
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
     }
 
     /**
@@ -48,10 +51,9 @@ public class MainActivity extends AppCompatActivity {
      */
     public void submitOrder(View view) {
         int price = calculatePrice();
+
         String summary = createOrderSummary(price);
         displayMessage(summary);
-
-
 
     }
 
@@ -66,8 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private String createOrderSummary(int price) {
+        CheckBox whipped = findViewById(R.id.whippedCream);
+        boolean state = whipped.isChecked();
         String name = "Nicholas Otieno";
-        String priceMessage = "Name: " + name + "\n" + "Quantity: " + quantity + "\n" + "Total: $ " + price + "\n" + "Thank You!";
+        String priceMessage = "Name: " + "\n" + "Add Whipped Cream? " + state + "\n" +
+                name + "\n" + "Quantity: " + quantity + "\n" + "Total: $ " + price + "\n" + "Thank You!";
         return priceMessage;
 
     }
@@ -87,8 +92,5 @@ public class MainActivity extends AppCompatActivity {
     private void displayMessage(String message) {
         TextView orderSummaryTextView = findViewById(R.id.order_summary_text_view);
         orderSummaryTextView.setText(message);
-
     }
-
-
 }
