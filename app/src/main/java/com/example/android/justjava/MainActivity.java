@@ -15,8 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
-
 /**
  * This app displays an order form to order coffee.
  */
@@ -49,31 +47,48 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the order button is clicked.
      */
     public void submitOrder(View view) {
-        int price = quantity * 5;
-        String priceMessage = "Total: $ " + price + "\n" + "Thank You!";
-        displayMessage(priceMessage);
+        int price = calculatePrice();
+        String summary = createOrderSummary(price);
+        displayMessage(summary);
+
+
+
     }
 
     /**
+     * Calculates the price of the order.
+     *
+     * @return number price of coffee ordered
+     */
+    private int calculatePrice() {
+        return quantity * 5;
+    }
+
+
+    private String createOrderSummary(int price) {
+        String name = "Nicholas Otieno";
+        String priceMessage = "Name: " + name + "\n" + "Quantity: " + quantity + "\n" + "Total: $ " + price + "\n" + "Thank You!";
+        return priceMessage;
+
+    }
+
+    /**
+     * @return totalPrice
      * This method displays the given quantity value on the screen.
      */
     private void displayQuantity(int number) {
         TextView quantityTextView = findViewById(R.id.quantity_text_view);
         quantityTextView.setText("" + number);
     }
-    /**
-     * This method displays the given price on the screen.
-     */
-    private void displayPrice(int number) {
-        TextView priceTextView = findViewById(R.id.price_text_view);
-        priceTextView.setText(NumberFormat.getCurrencyInstance().format(number));
-    }
 
     /**
      * This method displays the given text on the screen.
      */
     private void displayMessage(String message) {
-        TextView priceTextView = findViewById(R.id.price_text_view);
-        priceTextView.setText(message);
+        TextView orderSummaryTextView = findViewById(R.id.order_summary_text_view);
+        orderSummaryTextView.setText(message);
+
     }
+
+
 }
