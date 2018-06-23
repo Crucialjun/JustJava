@@ -12,8 +12,10 @@ package com.example.android.justjava;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -21,6 +23,7 @@ import android.widget.TextView;
  */
 public class MainActivity extends AppCompatActivity {
     int quantity = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,22 @@ public class MainActivity extends AppCompatActivity {
      * @return number price of coffee ordered
      */
     private int calculatePrice() {
-        return quantity * 5;
+        int basePrice = 5;
+        CheckBox whipped = findViewById(R.id.whippedCream);
+        boolean stateWhipped = whipped.isChecked();
+        CheckBox chocolate = findViewById(R.id.chocolate);
+        boolean stateChocolate = chocolate.isChecked();
+
+        if (stateWhipped) {
+            basePrice = basePrice + 1;
+        }
+        if (stateChocolate) {
+            basePrice = basePrice + 2;
+        }
+
+
+        int price = basePrice * quantity;
+        return price;
     }
 
 
@@ -72,9 +90,10 @@ public class MainActivity extends AppCompatActivity {
         boolean state = whipped.isChecked();
         CheckBox chocolate = findViewById(R.id.chocolate);
         boolean stateChocolate = chocolate.isChecked();
-        String name = "Nicholas Otieno";
-        String priceMessage = "Name: " + "\n" + "Add Whipped Cream? " + state + "\n" +
-                "Add Chocolate? " + stateChocolate + "\n" + name + "\n" + "Quantity: " +
+        EditText nameBox = findViewById(R.id.name);
+        Editable name = nameBox.getText();
+        String priceMessage = "Name: " + name + "\n" + "Add Whipped Cream? " + state + "\n" +
+                "Add Chocolate? " + stateChocolate + "\n" + "Quantity: " +
                 quantity + "\n" + "Total: $ " + price + "\n" + "Thank You!";
         return priceMessage;
 
