@@ -10,6 +10,9 @@
 package com.example.android.justjava;
 
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * This app displays an order form to order coffee.
@@ -37,7 +41,17 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the +(plus) button is clicked
      */
     public void increment(View view) {
-        quantity = quantity + 1;
+        Context context = getApplicationContext();
+        CharSequence text = "You cannot have more than 100 cups of coffee";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+
+        if (quantity < 100) {
+            quantity = quantity + 1;
+        } else {
+            toast.show();
+        }
+
         displayQuantity(quantity);
     }
 
@@ -45,7 +59,16 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the -(minus) button is clicked
      */
     public void decrement(View view) {
-        quantity = quantity - 1;
+        Context context = getApplicationContext();
+        CharSequence text = "You cannot have less than 1 cup of coffee";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+
+        if (quantity > 1) {
+            quantity = quantity - 1;
+        } else {
+            toast.show();
+        }
         displayQuantity(quantity);
     }
 
@@ -56,9 +79,19 @@ public class MainActivity extends AppCompatActivity {
         int price = calculatePrice();
 
         String summary = createOrderSummary(price);
-        displayMessage(summary);
 
+        EditText nameBox = findViewById(R.id.name);
+        Editable name = nameBox.getText();
+
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, "JustJava order for " + name);
+        intent.putExtra(Intent.EXTRA_TEXT, summary);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
+
 
     /**
      * Calculates the price of the order.
@@ -80,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        int price = basePrice * quantity;
-        return price;
+        return basePrice * quantity;
+
     }
 
 
@@ -92,15 +125,13 @@ public class MainActivity extends AppCompatActivity {
         boolean stateChocolate = chocolate.isChecked();
         EditText nameBox = findViewById(R.id.name);
         Editable name = nameBox.getText();
-        String priceMessage = "Name: " + name + "\n" + "Add Whipped Cream? " + state + "\n" +
-                "Add Chocolate? " + stateChocolate + "\n" + "Quantity: " +
-                quantity + "\n" + "Total: $ " + price + "\n" + "Thank You!";
-        return priceMessage;
+        return getString(R.string.name) + " " + name + " \n" + getString(R.string.whippedCreamState) + " " + state + "\n" +
+                getString(R.string.chocolateState) + " " + stateChocolate + "\n" + getString(R.string.quantity) + " " +
+                quantity + "\n" + getString(R.string.total) + " " + price + "\n" + getString(R.string.thankYou);
 
     }
 
     /**
-     * @return totalPrice
      * This method displays the given quantity value on the screen.
      */
     private void displayQuantity(int number) {
@@ -108,11 +139,5 @@ public class MainActivity extends AppCompatActivity {
         quantityTextView.setText("" + number);
     }
 
-    /**
-     * This method displays the given text on the screen.
-     */
-    private void displayMessage(String message) {
-        TextView orderSummaryTextView = findViewById(R.id.order_summary_text_view);
-        orderSummaryTextView.setText(message);
-    }
+
 }
